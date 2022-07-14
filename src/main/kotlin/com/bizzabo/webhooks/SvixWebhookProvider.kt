@@ -32,7 +32,5 @@ class SvixWebhookProvider(
     suspend fun createEndpoint(
         appId: String,
         endpointIn: EndpointIn
-    ): EndpointOut {
-        return svixClient.endpoint.create(appId, endpointIn)
-    }
+    ): EndpointOut = svixClient.endpoint.create(appId, endpointIn)
 }
