@@ -29,41 +29,10 @@ class SvixWebhookProvider(
             )
         )
 
-    suspend fun updateApplication(name: String, uuid: String, rateLimit: Int? = null): ApplicationOut =
-        svixClient.application.update(
-            uuid,
-            ApplicationIn(
-                name = name,
-                uid = uuid,
-                rateLimit = rateLimit
-            )
-        )
-
-    suspend fun deleteApplication(appId: String) = svixClient.application.delete(appId)
-
     suspend fun createEndpoint(
         appId: String,
         endpointIn: EndpointIn
     ): EndpointOut {
-        val encryptEndpointInSecret = encryptSecret(endpointIn)
-        return svixClient.endpoint.create(appId, encryptEndpointInSecret)
-    }
-
-    suspend fun updateEndpoint(
-        appId: String,
-        endpointId: String,
-        endpointUpdate: EndpointUpdate,
-    ): EndpointOut = svixClient.endpoint.update(appId, endpointId, endpointUpdate)
-
-    suspend fun createMessage(
-        appId: String,
-        messageIn: MessageIn,
-    ): MessageOut = svixClient.message.create(appId, messageIn)
-
-    private fun encryptSecret(endpointIn: EndpointIn): EndpointIn {
-        return if (!endpointIn.secret.isNullOrBlank())
-            endpointIn.copy(
-                secret = Base64.getEncoder().encodeToString(endpointIn.secret?.encodeToByteArray())
-            ) else endpointIn
+        return svixClient.endpoint.create(appId, endpointIn)
     }
 }

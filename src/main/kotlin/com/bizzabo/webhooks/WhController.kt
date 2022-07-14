@@ -12,11 +12,16 @@ import java.net.URI
 class WhController(private val svixProvider: SvixWebhookProvider) {
     @PostMapping("/hello-tom")
     fun hello() = mono {
-        svixProvider.createApplication("hello-tom", "some-app-id")
-        val endpointIn = EndpointIn(
-            url = URI.create("http://localhost:8080/webhooks/hello-tom"),
-            version = 1
-        )
-        svixProvider.createEndpoint("some-app-id", endpointIn)
+        try {
+            svixProvider.createApplication("hello-tom", "some-app-id")
+            val endpointIn = EndpointIn(
+                url = URI.create("http://localhost:8080/webhooks/hello-tom"),
+                version = 1
+            )
+            svixProvider.createEndpoint("some-app-id", endpointIn)
+        } catch (e: Exception) {
+            e.printStackTrace()
+            return@mono "Error had occurred"
+        }
     }
 }
